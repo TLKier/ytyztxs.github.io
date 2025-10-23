@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>永泰一中简牍通讯社 - 招新</title>
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+        }
+
+        :root {
+            --primary-blue: #3498db;
+            --primary-green: #2ecc71;
+            --accent-orange: #e67e22;
+            --light-bg: #f9f9f9;
+            --light-panel: #ffffff;
+            --dark-text: #333333;
+            --light-gray: #f0f0f0;
+            --medium-gray: #e0e0e0;
+            --border-radius: 8px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* 清新风格字体 */
+        .clean-text {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--medium-gray);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            margin-right: 8px;
+            font-size: 1.3rem;
+        }
+
+        /* 汉堡菜单样式 */
+        .hamburger {
+            position: relative;
+            width: 30px;
+            height: 20px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--primary-blue);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger-line:nth-child(1) {
+            top: 0;
+        }
+
+        .hamburger-line:nth-child(2) {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .hamburger-line:nth-child(3) {
+            bottom: 0;
+        }
+
+        /* 菜单激活状态 */
+        .hamburger.active .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger.active .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* 菜单内容 */
+        .menu-content {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 80px 30px 30px;
+            transition: all 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+            z-index: 999;
+            border-left: 1px solid var(--medium-gray);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .menu-content.active {
+            right: 0;
+        }
+
+        .menu-item {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding: 10px 0;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            width: 100%;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item:hover {
+            transform: translateX(10px);
+            color: var(--accent-orange);
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            margin-top: 70px;
+            padding: 20px;
+        }
+
+        /* 英雄区域 */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-green) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cmVjdCB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHJ4PSIzIi8+PC9nPjwvZz48L3N2Zz4=');
+            opacity: 0.3;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            position: relative;
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: var(--primary-blue);
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 部门展示区域 */
+        .departments-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: var(--primary-green);
+        }
+
+        .departments-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .department-card {
+            background: var(--light-panel);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .department-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-green);
+        }
+
+        .department-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .department-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        .department-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .department-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            opacity: 0.2;
+            color: var(--primary-blue);
+        }
+
+        /* 横向时间线 */
+        .timeline-section {
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+
+        .timeline-container {
+            display: flex;
+            min-width: 800px;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-green);
+        }
+
+        .timeline-item {
+            flex: 1;
+            padding: 0 15px;
+            position: relative;
+            text-align: center;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border: 2px solid var(--primary-green);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .timeline-content {
+            padding: 15px;
+            background: var(--light-panel);
+            border-radius: var(--border-radius);
+            margin-top: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-date {
+            font-weight: bold;
+            color: var(--accent-orange);
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .timeline-content h3 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--primary-blue);
+        }
+
+        .timeline-content p {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            background: var(--light-panel);
+            color: var(--dark-text);
+            border-top: 1px solid var(--medium-gray);
+            margin-top: 40px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer p {
+            margin-bottom: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .social-icon:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* 自定义弹窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--light-panel);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--accent-orange);
+            transform: rotate(90deg);
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .qq-contact {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .qq-contact span {
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        /* 响应式调整 */
+        @media (min-width: 768px) {
+            .departments-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .departments-grid {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo clean-text">
+            <span class="logo-icon">📡</span>
+            永泰一中简牍通讯社
+        </div>
+        <div class="hamburger" id="hamburger">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+        </div>
+        <div class="menu-content" id="menuContent">
+            <div class="menu-item clean-text" id="overview">社团概览</div>
+            <div class="menu-item clean-text" id="about">关于我们</div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 英雄区域 -->
+        <section class="hero">
+            <h1 class="clean-text">简牍通讯社招新</h1>
+            <p>记录校园点滴，传播青春声音。加入我们，成为校园媒体的中坚力量！</p>
+            <button class="cta-button clean-text" id="applyBtn">立即报名</button>
+        </section>
+
+        <!-- 部门展示 -->
+        <section class="departments-section">
+            <h2 class="section-title clean-text">我们的部门</h2>
+            <div class="departments-grid">
+                <div class="department-card">
+                    <div class="department-icon">📷</div>
+                    <h3 class="clean-text">摄影部</h3>
+                    <p>用镜头捕捉校园精彩瞬间，记录每一个值得纪念的时刻。</p>
+                    <button class="cta-button" style="font-size: 0.8rem; padding: 8px 15px;" data-department="photography">了解更多</button>
+                </div>
+                <div class="department-card">
+                    <div class="department-icon">✍️</div>
+                    <h3 class="clean-text">撰稿部</h3>
+                    <p>用文字书写校园故事，传递思想与情感的力量。</p>
+                    <button class="cta-button" style="font-size: 0.8rem; padding: 8px 15px;" data-department="writing">了解更多</button>
+                </div>
+                <div class="department-card">
+                    <div class="department-icon">🎤</div>
+                    <h3 class="clean-text">采访部</h3>
+                    <p>深入校园一线，对话师生，挖掘最真实的校园故事。</p>
+                    <button class="cta-button" style="font-size: 0.8rem; padding: 8px 15px;" data-department="interview">了解更多</button>
+                </div>
+                <div class="department-card">
+                    <div class="department-icon">💻</div>
+                    <h3 class="clean-text">开发部</h3>
+                    <p>构建数字化平台，用技术赋能校园传媒，打造创新传播方式。</p>
+                    <button class="cta-button" style="font-size: 0.8rem; padding: 8px 15px;" data-department="development">了解更多</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 横向时间线 -->
+        <section class="timeline-section">
+            <h2 class="section-title clean-text">招新时间线</h2>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date clean-text">9月1日-9月7日</div>
+                        <h3 class="clean-text">线上宣传</h3>
+                        <p>通过校园网站、社交媒体等渠道发布招新信息</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date clean-text">9月8日-9月10日</div>
+                        <h3 class="clean-text">现场咨询</h3>
+                        <p>在校园广场设置咨询点，解答同学疑问</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date clean-text">9月11日-9月15日</div>
+                        <h3 class="clean-text">报名阶段</h3>
+                        <p>接受线上及线下报名，提交个人资料</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date clean-text">9月16日-9月18日</div>
+                        <h3 class="clean-text">面试选拔</h3>
+                        <p>各部门组织面试，选拔合适的新成员</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date clean-text">9月20日</div>
+                        <h3 class="clean-text">结果公布</h3>
+                        <p>公布录取名单，新成员见面会</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 底部 -->
+        <footer class="footer">
+            <p class="clean-text">永泰一中简牍通讯社</p>
+            <p>联系我们: QQ 23820972</p>
+            <div class="social-icons">
+                <div class="social-icon" id="contactQQ">Q</div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title clean-text" id="modalTitle">标题</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <p>这里是弹窗内容。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 汉堡菜单交互
+        const hamburger = document.getElementById('hamburger');
+        const menuContent = document.getElementById('menuContent');
+        const overview = document.getElementById('overview');
+        const about = document.getElementById('about');
+
+        hamburger.addEventListener('click', function() {
+            this.classList.toggle('active');
+            menuContent.classList.toggle('active');
+        });
+
+        // 弹窗相关元素
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModal = document.getElementById('closeModal');
+
+        // 关闭弹窗
+        closeModal.addEventListener('click', function() {
+            modal.classList.remove('active');
+        });
+
+        // 点击弹窗外部关闭
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // 菜单项点击事件 - 显示弹窗
+        overview.addEventListener('click', function() {
+            modalTitle.textContent = '社团概览';
+            modalBody.innerHTML = `
+                <p>永泰一中简牍通讯社成立于2010年，是学校最具影响力的学生媒体组织。</p>
+                <p>我们致力于记录校园生活，传播校园文化，培养具有传媒素养和创新精神的学生。</p>
+                <p>通讯社下设四个部门：</p>
+                <ul>
+                    <li>摄影部 - 用镜头记录校园</li>
+                    <li>撰稿部 - 用文字书写故事</li>
+                    <li>采访部 - 用对话挖掘真相</li>
+                    <li>开发部 - 用技术赋能传媒</li>
+                </ul>
+                <div class="qq-contact">
+                    <p>联系我们: <span>QQ 23820972</span></p>
+                </div>
+            `;
+            modal.classList.add('active');
+            hamburger.classList.remove('active');
+            menuContent.classList.remove('active');
+        });
+
+        about.addEventListener('click', function() {
+            modalTitle.textContent = '关于我们';
+            modalBody.innerHTML = `
+                <p>简牍通讯社的名字来源于古代的"简牍"，寓意着我们如同古代的记录者一样，用现代的方式记录和传播校园故事。</p>
+                <p>我们的使命是：</p>
+                <ul>
+                    <li>记录校园重要事件和活动</li>
+                    <li>传播积极向上的校园文化</li>
+                    <li>培养具有传媒素养的学生</li>
+                    <li>打造校园信息传播平台</li>
+                </ul>
+                <p>自成立以来，我们已发布数百篇新闻报道，组织了数十场校园活动，成为永泰一中不可或缺的媒体力量。</p>
+                <div class="qq-contact">
+                    <p>联系我们: <span>QQ 23820972</span></p>
+                </div>
+            `;
+            modal.classList.add('active');
+            hamburger.classList.remove('active');
+            menuContent.classList.remove('active');
+        });
+
+        // 立即报名按钮
+        document.getElementById('applyBtn').addEventListener('click', function() {
+            modalTitle.textContent = '报名加入';
+            modalBody.innerHTML = `
+                <p>感谢您对简牍通讯社的兴趣！请按照以下步骤完成报名：</p>
+                <ol>
+                    <li>添加我们的QQ: 23820972</li>
+                    <li>发送您的姓名、班级和意向部门</li>
+                    <li>等待我们的回复和面试通知</li>
+                </ol>
+                <p>报名截止日期：9月15日</p>
+                <p>面试时间：9月16日-9月18日</p>
+                <div class="qq-contact">
+                    <p>联系我们: <span>QQ 23820972</span></p>
+                </div>
+            `;
+            modal.classList.add('active');
+        });
+
+        // 部门了解更多按钮
+        document.querySelectorAll('[data-department]').forEach(button => {
+            button.addEventListener('click', function() {
+                const department = this.getAttribute('data-department');
+                let title = '';
+                let content = '';
+                
+                switch(department) {
+                    case 'photography':
+                        title = '摄影部';
+                        content = `
+                            <p>摄影部负责用镜头记录校园生活的每一个精彩瞬间。</p>
+                            <p>主要工作：</p>
+                            <ul>
+                                <li>校园活动的现场拍摄</li>
+                                <li>校园风光和人文纪实摄影</li>
+                                <li>照片后期处理和编辑</li>
+                                <li>与其他部门合作完成报道任务</li>
+                            </ul>
+                            <p>我们寻找：</p>
+                            <ul>
+                                <li>对摄影有浓厚兴趣的同学</li>
+                                <li>有相机使用经验者优先</li>
+                                <li>具备一定审美能力和构图意识</li>
+                                <li>愿意学习和提升摄影技能</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'writing':
+                        title = '撰稿部';
+                        content = `
+                            <p>撰稿部负责用文字记录校园故事，传递思想和情感。</p>
+                            <p>主要工作：</p>
+                            <ul>
+                                <li>撰写校园新闻报道</li>
+                                <li>创作校园故事和特写</li>
+                                <li>编辑和校对稿件</li>
+                                <li>与其他部门合作完成报道任务</li>
+                            </ul>
+                            <p>我们寻找：</p>
+                            <ul>
+                                <li>热爱写作，有较好文字功底的同学</li>
+                                <li>具备观察力和思考能力</li>
+                                <li>能够按时完成写作任务</li>
+                                <li>愿意接受写作指导和改进</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'interview':
+                        title = '采访部';
+                        content = `
+                            <p>采访部负责深入校园一线，通过对话挖掘真实故事。</p>
+                            <p>主要工作：</p>
+                            <ul>
+                                <li>策划和执行采访任务</li>
+                                <li>与师生进行深度交流</li>
+                                <li>整理采访内容和素材</li>
+                                <li>与其他部门合作完成报道任务</li>
+                            </ul>
+                            <p>我们寻找：</p>
+                            <ul>
+                                <li>善于沟通和交流的同学</li>
+                                <li>具备良好的倾听能力</li>
+                                <li>有较强的人际交往能力</li>
+                                <li>能够尊重采访对象并保护隐私</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'development':
+                        title = '开发部';
+                        content = `
+                            <p>开发部负责构建数字化平台，用技术赋能校园传媒。</p>
+                            <p>主要工作：</p>
+                            <ul>
+                                <li>开发和维护通讯社网站</li>
+                                <li>制作校园活动的线上互动内容</li>
+                                <li>开发校园信息传播的小程序和应用</li>
+                                <li>探索新媒体技术的应用</li>
+                            </ul>
+                            <p>我们寻找：</p>
+                            <ul>
+                                <li>对编程和技术感兴趣的同学</li>
+                                <li>有HTML/CSS/JavaScript基础者优先</li>
+                                <li>具备解决问题的能力和耐心</li>
+                                <li>愿意学习新技术和工具</li>
+                            </ul>
+                        `;
+                        break;
+                }
+                
+                modalTitle.textContent = title;
+                modalBody.innerHTML = content + `
+                    <div class="qq-contact">
+                        <p>想了解更多或报名加入${title}？请联系我们: <span>QQ 23820972</span></p>
+                    </div>
+                `;
+                modal.classList.add('active');
+            });
+        });
+
+        // QQ联系按钮
+        document.getElementById('contactQQ').addEventListener('click', function() {
+            modalTitle.textContent = '联系我们';
+            modalBody.innerHTML = `
+                <p>感谢您对永泰一中简牍通讯社的关注！</p>
+                <p>如果您有任何问题或想加入我们，请通过以下方式联系我们：</p>
+                <div class="qq-contact">
+                    <p>QQ: <span>23820972</span></p>
+                </div>
+                <p>我们会在收到消息后尽快回复您。</p>
+                <p>期待与您在简牍通讯社相遇！</p>
+            `;
+            modal.classList.add('active');
+        });
+    </script>
+</body>
+</html>

@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>永泰一中简牍通讯社 - 招新</title>
+    <title>永泰一中简牍通讯社官网</title>
     <style>
-        /* 基础重置 + 核心样式配置（方正行楷体+毛玻璃变量） */
         * {
             margin: 0;
             padding: 0;
@@ -20,6 +19,9 @@
             --light: #f8fafc;
             --dark: #1e293b;
             --gray: #94a3b8;
+            /* 扩大颜色差值，增强渐变感知 */
+            --water-start: rgba(37, 99, 235, 0.35); /* 初始更深 */
+            --water-end: rgba(37, 99, 235, 0.03); /* 结束更淡，接近透明 */
             --radius: 6px;
             --shadow: 0 2px 8px rgba(0,0,0,0.06);
             --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
@@ -37,46 +39,170 @@
             opacity: 0.95;
         }
 
-        /* 开场动画 */
+        /* 开场动画容器（包含文字+水位动画） */
         .splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+            background: #f5fafe;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 9999;
-            transition: opacity 0.6s ease-out;
+            overflow: hidden;
         }
-
+        /* 文字动画层（层级最高） */
         .splash-text {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 16px;
             font-size: 2.8rem;
             font-weight: 500;
             color: var(--primary);
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            text-align: center;
+            margin-top: -10px;
         }
-
-        .splash-word-1 {
+        .splash-word-1, .splash-word-2, .splash-word-3 {
             opacity: 0;
             transform: translateY(20px);
-            animation: fadeInUp 1s ease-out forwards;
+            animation: fadeInUp 0.8s ease-out forwards;
+            margin: 0;
+        }
+        .splash-word-1 { animation-delay: 0.3s; }
+        .splash-word-2 { animation-delay: 0.9s; }
+        .splash-word-3 { animation-delay: 1.5s; }
+
+        /* 背景渐变层 */
+        .splash-screen::before {
+            content: '';
+            position: absolute;
+            width: 180%;
+            height: 180%;
+            background: linear-gradient(120deg, rgba(37,99,235,0.2) 0%, rgba(16,185,129,0.1) 100%);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: fadeExpand 2s ease-out forwards;
+            z-index: 0;
+        }
+        .splash-screen::after {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            filter: blur(20px);
+            transform: scale(0);
+            animation: fadeExpand 1.8s ease-out forwards 0.2s;
+            z-index: 1;
         }
 
-        .splash-word-2 {
+        /* 水位上涨动画（强化渐变+加速） */
+        .ocean {
+            position: absolute;
+            bottom: -100%; /* 初始在屏幕下方 */
+            left: 0;
+            width: 100%;
+            height: 110%; /* 超出屏幕高度，确保没过顶端 */
+            z-index: 2;
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInUp 1s ease-out forwards 0.5s;
+            /* 同步执行：水位上涨 + 强颜色渐变 */
+            animation: 
+                waterRise 0.8s ease-out forwards, /* 保持加速节奏 */
+                waterFade 0.8s linear forwards; /* 线性渐变，变化更均匀明显 */
+            animation-delay: 2.8s; /* 文字动画结束后触发 */
+        }
+        /* 波浪同步渐变，增强整体效果 */
+        .wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background-repeat: repeat-x;
+            transform-origin: center bottom;
+            /* 波浪透明度随水位同步渐变 */
+            animation: 
+                waveMove 8s linear infinite,
+                waveFade 0.8s linear forwards;
+            animation-delay: 2.8s;
+        }
+        .wave-1 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".6" fill="%232563eb"/></svg>');
+        }
+        .wave-2 {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".5" fill="%232563eb"/></svg>');
+            animation-name: waveMoveReverse, waveFade;
+        }
+        /* 气泡层（随水位同步显示） */
+        .bubbles {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+            animation-delay: 2.8s;
+        }
+        .bubble {
+            position: absolute;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.5); /* 气泡稍明显 */
+            border-radius: 50%;
+            opacity: 0;
+            animation: bubbleRise 1s ease-out infinite;
         }
 
+        /* 核心动画关键帧（强化渐变） */
         @keyframes fadeInUp {
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeExpand {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* 水位加速上涨+停留 */
+        @keyframes waterRise {
+            0% { bottom: -100%; opacity: 0; }
+            80% { bottom: -5%; opacity: 1; } /* 超出顶端5%，确保完全覆盖 */
+            100% { bottom: -5%; opacity: 1; } /* 停留 */
+        }
+        /* 强化颜色渐变：从深到极淡，线性变化更明显 */
+        @keyframes waterFade {
+            0% { background: var(--water-start); }
+            100% { background: var(--water-end); }
+        }
+        /* 波浪透明度同步渐变，增强整体感知 */
+        @keyframes waveFade {
+            0% { opacity: 0.6; }
+            100% { opacity: 0.2; }
+        }
+        @keyframes waveMove {
+            0% { transform: translateX(0) scaleY(1); }
+            100% { transform: translateX(-50%) scaleY(1); }
+        }
+        @keyframes waveMoveReverse {
+            0% { transform: translateX(-50%) scaleY(1); }
+            100% { transform: translateX(0) scaleY(1); }
+        }
+        @keyframes bubbleRise {
+            0% { bottom: 0; opacity: 0; transform: scale(0.5); }
+            20% { opacity: 1; transform: scale(1); }
+            100% { bottom: 100%; opacity: 0; transform: scale(1.2); }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         /* 导航栏 */
@@ -108,13 +234,13 @@
             font-size: 1.5rem;
         }
 
-        /* 汉堡菜单（优化叉号样式，确保点击可关闭） */
+        /* 汉堡菜单 */
         .hamburger {
             width: 24px;
             height: 18px;
             position: relative;
             cursor: pointer;
-            z-index: 1001; /* 确保层级高于菜单，点击可关闭 */
+            z-index: 1001;
         }
 
         .hamburger span {
@@ -130,16 +256,11 @@
         .hamburger span:nth-child(2) { top: 50%; transform: translateY(-50%); }
         .hamburger span:nth-child(3) { bottom: 0; }
 
-        /* 优化叉号样式，更清晰可见 */
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
         .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(5px, -5px);
-        }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-        /* 菜单内容（新增电子投壶项） */
+        /* 菜单内容 */
         .menu-content {
             position: fixed;
             top: 0;
@@ -185,7 +306,7 @@
 
         .main-content.visible { opacity: 1; }
 
-        /* 首页横幅（毛玻璃效果） */
+        /* 首页横幅 */
         .home-banner {
             text-align: center;
             padding: 80px 24px;
@@ -425,7 +546,6 @@
             display: flex;
             justify-content: center;
             gap: 16px;
-            margin-bottom: 12px;
         }
 
         .social-link {
@@ -447,18 +567,6 @@
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
-        }
-
-        .music-link-text {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: var(--transition);
-        }
-
-        .music-link-text:hover {
-            color: var(--accent);
-            text-decoration: underline;
         }
 
         /* 弹窗 */
@@ -576,15 +684,26 @@
                 right: auto;
             }
             .home-banner h1 { font-size: 2.2rem; }
+            .splash-text { font-size: 2.2rem; gap: 14px; margin-top: -8px; }
+            .ocean { animation-duration: 0.6s; } /* 移动端水位更快 */
+            .bubble { animation-duration: 0.8s; }
         }
     </style>
 </head>
 <body>
-    <!-- 开场动画 -->
+    <!-- 开场动画（文字动画 → 水位上涨动画） -->
     <div class="splash-screen" id="splash">
+        <!-- 文字动画层 -->
         <div class="splash-text">
             <span class="splash-word-1">Wow</span>
             <span class="splash-word-2">终于等到你</span>
+            <span class="splash-word-3">欢迎来到通讯社</span>
+        </div>
+        <!-- 水位上涨动画层 -->
+        <div class="ocean">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="bubbles" id="bubbles"></div>
         </div>
     </div>
 
@@ -603,20 +722,18 @@
             <div class="menu-item" id="overview">社团概览</div>
             <div class="menu-item" id="about">关于我们</div>
             <div class="menu-item" id="contentError">内容勘误</div>
-            <div class="menu-item" id="gameLink">电子投壶</div> <!-- 新增电子投壶菜单项 -->
+            <div class="menu-item" id="gameLink">电子投壶</div>
         </div>
     </nav>
 
     <!-- 主内容 -->
     <div class="main-content" id="mainContent">
-        <!-- 首页横幅（毛玻璃效果） -->
         <section class="home-banner">
             <h1>简牍通讯社招新</h1>
             <p>记录校园点滴，传播青春声音。加入我们，成为校园媒体的中坚力量！</p>
             <button class="btn" id="applyBtn">立即报名</button>
         </section>
 
-        <!-- 部门展示 -->
         <section class="section">
             <h2 class="section-title">我们的部门</h2>
             <div class="departments-grid">
@@ -643,7 +760,6 @@
             </div>
         </section>
 
-        <!-- 时间线 -->
         <section class="section">
             <h2 class="section-title">招新时间线</h2>
             <div class="timeline">
@@ -698,10 +814,9 @@
                 本界面由简牍通讯社开发部开发
             </div>
             <div class="social-links">
-                <div class="social-link" id="contactQQ">Q</div>
-                <a href="world.execute.me.html" class="social-link" id="musicLink">🎵</a>
+                <div class="social-link" id="contactQQ">QQ</div>
+                <a href="https://b23.tv/QoRcqAX" class="social-link" id="bilibiliLink" target="_blank">B站</a>
             </div>
-            <a href="world.execute.me.html" class="music-link-text">点击我听歌</a>
         </footer>
     </div>
 
@@ -719,18 +834,38 @@
     </div>
 
     <script>
-        // 开场动画逻辑
+        // 1. 创建气泡元素
+        document.addEventListener('DOMContentLoaded', () => {
+            const bubblesContainer = document.getElementById('bubbles');
+            // 生成30个随机气泡（短时动画无需过多）
+            for (let i = 0; i < 30; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                // 随机大小（5-15px）
+                const size = Math.random() * 10 + 5;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                // 随机水平位置
+                bubble.style.left = `${Math.random() * 100}%`;
+                // 随机动画延迟（0-0.8s）
+                bubble.style.animationDelay = `${Math.random() * 0.8}s`;
+                bubblesContainer.appendChild(bubble);
+            }
+        });
+
+        // 2. 动画时序控制：文字动画 → 水位动画（强化渐变+加速） → 显示主内容
         const splash = document.getElementById('splash');
         const mainContent = document.getElementById('mainContent');
+        // 总动画时长 = 文字动画2.5s + 水位动画0.8s（含停留） + 淡出0.6s
         setTimeout(() => {
             splash.style.opacity = 0;
             setTimeout(() => {
                 splash.style.display = 'none';
                 mainContent.classList.add('visible');
             }, 600);
-        }, 2000);
+        }, 3900); // 2.8s文字动画延迟 + 0.8s水位动画 + 0.3s缓冲 = 3.9s后开始淡出
 
-        // 汉堡菜单交互（修复关闭功能：点击汉堡菜单可切换打开/关闭）
+        // 3. 原有交互逻辑保留
         const hamburger = document.getElementById('hamburger');
         const menuContent = document.getElementById('menuContent');
         hamburger.addEventListener('click', () => {
@@ -738,14 +873,12 @@
             menuContent.classList.toggle('active');
         });
 
-        // 弹窗基础逻辑
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modalTitle');
         const modalBody = document.getElementById('modalBody');
         const closeModal = document.getElementById('closeModal');
         const hideModal = () => {
             modal.classList.remove('active');
-            // 关闭弹窗时同步关闭汉堡菜单
             hamburger.classList.remove('active');
             menuContent.classList.remove('active');
         };
@@ -792,7 +925,7 @@
             modal.classList.add('active');
         });
 
-        // 内容勘误弹窗（新增）
+        // 内容勘误弹窗
         document.getElementById('contentError').addEventListener('click', () => {
             modalTitle.textContent = '内容勘误反馈';
             modalBody.innerHTML = `
@@ -809,12 +942,11 @@
             modal.classList.add('active');
         });
 
-        // 电子投壶跳转（新增）
+        // 电子投壶跳转
         document.getElementById('gameLink').addEventListener('click', () => {
-            // 关闭汉堡菜单后跳转
             hamburger.classList.remove('active');
             menuContent.classList.remove('active');
-            window.location.href = 'game.html'; // 跳转至投壶游戏页面
+            window.location.href = 'game.html';
         });
 
         // 立即报名弹窗
@@ -950,10 +1082,8 @@
             modal.classList.add('active');
         });
 
-        // 听歌链接跳转（新增）
-        document.getElementById('musicLink').addEventListener('click', () => {
-            window.location.href = 'world.execute.me.html';
-        });
+        // B站链接跳转
+        document.getElementById('bilibiliLink').addEventListener('click', (e) => {});
     </script>
 </body>
 </html>

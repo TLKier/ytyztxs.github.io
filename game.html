@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>通讯社运动会投壶-网络版</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: #e5e7eb;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .extra-score {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center p-4 font-sans text-gray-800">
+    <div class="w-full max-w-2xl bg-white rounded-2xl shadow-sm p-6 md:p-8">
+        <div class="w-full text-center mb-6">
+            <h1 class="text-2xl font-semibold text-gray-900">通讯社运动会投壶-网络版</h1>
+        </div>
+
+        <div class="flex justify-around items-center mb-6">
+            <div class="text-center">
+                <p class="text-xs text-gray-500">得分</p>
+                <p id="score" class="text-xl font-bold text-blue-600">0</p>
+            </div>
+            <div class="text-center">
+                <p class="text-xs text-gray-500">投次</p>
+                <p id="shots" class="text-xl font-bold text-gray-700">0</p>
+            </div>
+            <div class="text-center">
+                <p class="text-xs text-gray-500">当前段位</p>
+                <p id="rank" class="text-xl font-bold text-orange-500">投壶菜鸟</p>
+            </div>
+        </div>
+
+        <div class="w-full h-[350px] bg-gray-100 rounded-xl mb-6 overflow-hidden relative">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="space-y-6 mb-6">
+            <div class="flex items-center gap-4">
+                <label for="angle" class="w-16 text-sm font-medium text-gray-600">角度</label>
+                <input type="range" id="angle" min="20" max="50" value="35" />
+                <span id="angle-value" class="w-12 text-center font-medium text-blue-600">35°</span>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <label for="power" class="w-16 text-sm font-medium text-gray-600">力度</label>
+                <input type="range" id="power" min="20" max="50" value="35" />
+                <span id="power-value" class="w-12 text-center font-medium text-blue-600">35%</span>
+            </div>
+
+            <button id="shoot-btn" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200 shadow-sm hover:shadow">
+                投射箭矢
+            </button>
+        </div>
+
+        <div id="result" class="text-center text-sm py-2 min-h-[20px] font-medium"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const angleSlider = document.getElementById('angle');
+        const powerSlider = document.getElementById('power');
+        const angleValue = document.getElementById('angle-value');
+        const powerValue = document.getElementById('power-value');
+        const shootBtn = document.getElementById('shoot-btn');
+        const resultDisplay = document.getElementById('result');
+        const scoreDisplay = document.getElementById('score');
+        const shotsDisplay = document.getElementById('shots');
+        const rankDisplay = document.getElementById('rank');
+
+        function initCanvasSize() {
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+        }
+
+        let score = 0;
+        let shots = 0;
+        let arrowInMotion = false;
+        let arrowX, arrowY;
+        let arrowVx, arrowVy;
+        const gravity = 0.25;
+        let animationId;
+        let consecutiveMouthHits = 0; // 连续命中壶口计数器
+
+        const pot = {
+            width: 50,
+            height: 70,
+            mouthWidth: 25,
+            mouthHeight: 12,
+            x: 0,
+            y: 0
+        };
+
+        function getRank(score) {
+            if (score >= 4000) return '别投了哥你已经是投壶之神了';
+            if (score >= 3000) return '投壶传说';
+            if (score >= 2000) return '投壶之王';
+            if (score >= 1500) return '投壶高手';
+            if (score >= 1000) return '小试牛刀';
+            if (score >= 500) return '有点东西';
+            if (score >= 100) return '投壶新手';
+            return '投壶菜鸟';
+        }
+
+        function initGame() {
+            initCanvasSize();
+            const targetCenterY = canvas.height * 0.65;
+            arrowX = canvas.width * 0.05;
+            arrowY = targetCenterY;
+            pot.x = canvas.width - pot.width / 2 - 20;
+            pot.y = targetCenterY;
+
+            angleSlider.addEventListener('input', updateControls);
+            powerSlider.addEventListener('input', updateControls);
+            shootBtn.addEventListener('click', shootArrow);
+            window.addEventListener('resize', () => {
+                initCanvasSize();
+                const targetCenterY = canvas.height * 0.65;
+                arrowY = targetCenterY;
+                pot.x = canvas.width - pot.width / 2 - 20;
+                pot.y = targetCenterY;
+                drawScene();
+            });
+
+            drawScene();
+            updateControls();
+            updateRank();
+        }
+
+        function updateControls() {
+            angleValue.textContent = `${angleSlider.value}°`;
+            powerValue.textContent = `${powerSlider.value}%`;
+            if (!arrowInMotion) drawScene();
+        }
+
+        function updateRank() {
+            const rank = getRank(score);
+            rankDisplay.textContent = rank;
+            if (score >= 4000) rankDisplay.className = 'text-xl font-bold text-purple-600';
+            else if (score >= 2000) rankDisplay.className = 'text-xl font-bold text-red-600';
+            else if (score >= 1000) rankDisplay.className = 'text-xl font-bold text-orange-500';
+            else rankDisplay.className = 'text-xl font-bold text-gray-600';
+        }
+
+        function drawScene() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#d6b89c';
+            ctx.fillRect(0, canvas.height * 0.85, canvas.width, canvas.height * 0.15);
+            ctx.fillStyle = '#f3f4f6';
+            ctx.fillRect(0, 0, canvas.width, canvas.height * 0.85);
+            drawPot();
+            if (!arrowInMotion) {
+                drawArrow(arrowX, arrowY, parseInt(angleSlider.value));
+                drawAimLine();
+            }
+        }
+
+        function drawPot() {
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(pot.x - pot.width/2, pot.y - pot.height/2, pot.width, pot.height);
+            ctx.fillStyle = '#a06a3c';
+            ctx.fillRect(pot.x - pot.mouthWidth/2, pot.y - pot.height/2 - pot.mouthHeight, pot.mouthWidth, pot.mouthHeight);
+            ctx.fillStyle = '#333';
+            ctx.fillRect(pot.x - pot.mouthWidth/2 + 2, pot.y - pot.height/2 - pot.mouthHeight + 2, pot.mouthWidth - 4, pot.mouthHeight - 4);
+        }
+
+        function drawArrow(x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(-angle * Math.PI / 180);
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(-35, -2, 70, 4);
+            ctx.fillStyle = '#c0c0c0';
+            ctx.beginPath();
+            ctx.moveTo(35, 0);
+            ctx.lineTo(25, -4);
+            ctx.lineTo(25, 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath();
+            ctx.moveTo(-35, 0);
+            ctx.lineTo(-25, -4);
+            ctx.lineTo(-25, 4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function drawAimLine() {
+            const angle = parseInt(angleSlider.value) * Math.PI / 180;
+            const power = parseInt(powerSlider.value) * 0.35;
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(arrowX, arrowY);
+            let x = arrowX;
+            let y = arrowY;
+            let vx = Math.cos(angle) * power;
+            let vy = -Math.sin(angle) * power;
+            for (let i = 0; i < 80; i++) {
+                x += vx;
+                y += vy;
+                vy += gravity;
+                if (y > canvas.height * 0.85 || x > canvas.width) break;
+                ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function shootArrow() {
+            if (arrowInMotion) return;
+            arrowInMotion = true;
+            shots++;
+            shotsDisplay.textContent = shots;
+            resultDisplay.textContent = '';
+            resultDisplay.className = 'text-center text-sm py-2 min-h-[20px] font-medium';
+            const angle = parseInt(angleSlider.value) * Math.PI / 180;
+            const power = parseInt(powerSlider.value) * 0.35;
+            arrowVx = Math.cos(angle) * power;
+            arrowVy = -Math.sin(angle) * power;
+            animateArrow();
+        }
+
+        function animateArrow() {
+            arrowX += arrowVx;
+            arrowY += arrowVy;
+            arrowVy += gravity;
+            const hitResult = checkCollision();
+            if (hitResult || arrowY > canvas.height * 0.85 || arrowX > canvas.width) {
+                handleArrowStop(hitResult);
+                return;
+            }
+            drawScene();
+            const currentAngle = Math.atan2(-arrowVy, arrowVx) * 180 / Math.PI;
+            drawArrow(arrowX, arrowY, currentAngle);
+            animationId = requestAnimationFrame(animateArrow);
+        }
+
+        function checkCollision() {
+            if (arrowX > pot.x - pot.mouthWidth/2 && arrowX < pot.x + pot.mouthWidth/2 && arrowY > pot.y - pot.height/2 - pot.mouthHeight && arrowY < pot.y - pot.height/2) {
+                return 'mouth';
+            }
+            if (arrowX > pot.x - pot.width/2 && arrowX < pot.x + pot.width/2 && arrowY > pot.y - pot.height/2 && arrowY < pot.y + pot.height/2) {
+                return 'body';
+            }
+            return false;
+        }
+
+        function handleArrowStop(hitResult) {
+            arrowInMotion = false;
+            cancelAnimationFrame(animationId);
+            arrowX = canvas.width * 0.05;
+            arrowY = pot.y;
+            let baseScore = 0;
+            let extraScore = 0;
+            let resultText = '';
+
+            if (hitResult === 'mouth') {
+                consecutiveMouthHits++;
+                baseScore = 10;
+                // 连续命中加分规则
+                if (consecutiveMouthHits >= 10) {
+                    extraScore = 20;
+                    resultText = `精准命中壶口！+${baseScore}分，连续${consecutiveMouthHits}次额外+<span class="extra-score">${extraScore}</span>分`;
+                } else if (consecutiveMouthHits >= 3) {
+                    extraScore = 10;
+                    resultText = `精准命中壶口！+${baseScore}分，连续${consecutiveMouthHits}次额外+<span class="extra-score">${extraScore}</span>分`;
+                } else {
+                    resultText = `精准命中壶口！+${baseScore}分`;
+                }
+                score += baseScore + extraScore;
+            } else if (hitResult === 'body') {
+                consecutiveMouthHits = 0; // 命中壶身重置连续计数器
+                baseScore = 5;
+                resultText = `命中壶身！+${baseScore}分`;
+                score += baseScore;
+            } else {
+                consecutiveMouthHits = 0; // 未命中重置连续计数器
+                resultText = '未命中，调整角度和力度再试';
+            }
+
+            scoreDisplay.textContent = score;
+            resultDisplay.innerHTML = resultText; // 使用innerHTML显示带样式的额外加分
+            resultDisplay.className = hitResult ? 'text-center text-sm py-2 min-h-[20px] font-medium text-green-600' : 'text-center text-sm py-2 min-h-[20px] font-medium text-red-500';
+            updateRank();
+            drawScene();
+        }
+
+        window.addEventListener('load', initGame);
+    </script>
+</body>
+</html>

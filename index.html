@@ -141,7 +141,7 @@
             background: var(--accent); /* 叉号换色 */
         }
 
-        /* 菜单内容（新增内容勘误项） */
+        /* 菜单内容（新增电子投壶项） */
         .menu-content {
             position: fixed;
             top: 0;
@@ -590,7 +590,8 @@
         <div class="menu-content" id="menuContent">
             <div class="menu-item" id="overview">社团概览</div>
             <div class="menu-item" id="about">关于我们</div>
-            <div class="menu-item" id="contentError">内容勘误</div> <!-- 新增内容勘误项 -->
+            <div class="menu-item" id="contentError">内容勘误</div>
+            <div class="menu-item" id="gameLink">电子投壶</div> <!-- 新增电子投壶菜单项 -->
         </div>
     </nav>
 
@@ -794,6 +795,14 @@
             modal.classList.add('active');
         });
 
+        // 电子投壶跳转（新增）
+        document.getElementById('gameLink').addEventListener('click', () => {
+            // 关闭汉堡菜单后跳转
+            hamburger.classList.remove('active');
+            menuContent.classList.remove('active');
+            window.location.href = 'game.html'; // 跳转至投壶游戏页面
+        });
+
         // 立即报名弹窗
         document.getElementById('applyBtn').addEventListener('click', () => {
             modalTitle.textContent = '报名加入简牍通讯社';
@@ -802,7 +811,7 @@
                 <ol>
                     <li>添加官方联系QQ：259632894，验证信息备注"通讯社报名"；</li>
                     <li>添加成功后，发送个人报名信息，格式为：【报名】+ 班级 + 姓名 + 意向部门；</li>
-                    <li>提交信息后，请耐心等待社内人员回复，后续面试安排将通过QQ通知。</li>
+                    <li>提交信息后，请耐心等待工作人员回复，后续面试安排将通过QQ通知。</li>
                 </ol>
                 <p>感谢各位同学对简牍通讯社的关注与支持！我们始终致力于为热爱传媒的同学提供成长平台，期待与各位携手，用镜头记录校园美好，用文字传递青春力量，共同打造优质校园媒体内容，开启精彩的校园社团之旅！</p>
                 <div class="qq-card">

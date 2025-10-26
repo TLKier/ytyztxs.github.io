@@ -133,12 +133,10 @@
         /* 优化叉号样式，更清晰可见 */
         .hamburger.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
-            background: var(--accent); /* 叉号换色，区分打开/关闭状态 */
         }
         .hamburger.active span:nth-child(2) { opacity: 0; }
         .hamburger.active span:nth-child(3) {
             transform: rotate(-45deg) translate(5px, -5px);
-            background: var(--accent); /* 叉号换色 */
         }
 
         /* 菜单内容（新增电子投壶项） */
@@ -427,6 +425,7 @@
             display: flex;
             justify-content: center;
             gap: 16px;
+            margin-bottom: 12px;
         }
 
         .social-link {
@@ -441,12 +440,25 @@
             transition: var(--transition);
             font-size: 1.2rem;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .social-link:hover {
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
+        }
+
+        .music-link-text {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .music-link-text:hover {
+            color: var(--accent);
+            text-decoration: underline;
         }
 
         /* 弹窗 */
@@ -687,7 +699,9 @@
             </div>
             <div class="social-links">
                 <div class="social-link" id="contactQQ">Q</div>
+                <a href="world.execute.me.html" class="social-link" id="musicLink">🎵</a>
             </div>
+            <a href="world.execute.me.html" class="music-link-text">点击我听歌</a>
         </footer>
     </div>
 
@@ -934,6 +948,11 @@
                 <p>期待与您在简牍通讯社相遇！</p>
             `;
             modal.classList.add('active');
+        });
+
+        // 听歌链接跳转（新增）
+        document.getElementById('musicLink').addEventListener('click', () => {
+            window.location.href = 'world.execute.me.html';
         });
     </script>
 </body>
